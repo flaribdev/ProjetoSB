@@ -1,0 +1,52 @@
+Configuração email
+export SMTP_HOST="smtp.gmail.com"
+export SMTP_PORT="587"
+export SMTP_USER="flavioribeirocap22@gmail.com"
+export SMTP_SENHA="qhdg tihc hstt ijag"
+export URL_SISTEMA="http://localhost:8503"
+streamlit run app.py
+
+CREATE TABLE IF NOT EXISTS unidades (
+    id   INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS esb (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome       TEXT NOT NULL UNIQUE,   -- ex.: 'ANDARAI ESB'
+    unidade_id INTEGER NOT NULL REFERENCES unidades(id)
+);
+
+CREATE TABLE IF NOT EXISTS esf (
+    id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome  TEXT NOT NULL UNIQUE,        -- nome EXATO como aparece na planilha (local_nome)
+    esb_id INTEGER NOT NULL REFERENCES esb(id)
+);
+Listagem tabagismo
+CREATE TABLE IF NOT EXISTS pacientes (
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    equipe         TEXT NOT NULL,
+    microarea      TEXT,
+    prontuario     TEXT NOT NULL UNIQUE,
+    sus            TEXT,
+    nome_paciente  TEXT NOT NULL,
+    idade          INTEGER,
+    atendimento_sb INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS usuarios (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    email      TEXT NOT NULL UNIQUE,
+    senha_hash TEXT NOT NULL,
+    perfil     TEXT NOT NULL DEFAULT 'unidade',
+    unidade_id INTEGER REFERENCES unidades(id),
+    ativo      INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS redefinicoes_senha (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    email     TEXT NOT NULL,
+    token     TEXT NOT NULL,
+    expira_em TEXT NOT NULL,
+    usado     INTEGER NOT NULL DEFAULT 0
+);
